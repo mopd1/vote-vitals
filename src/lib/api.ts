@@ -38,8 +38,20 @@ async function handleResponse(response: Response) {
   return response.json();
 }
 
-export async function getMembers(page: number = 1, house: string = 'Commons', party?: string): Promise<MembersResponse> {
-  const cacheKey = `members-${page}-${house}-${party || 'all'}`;
+export interface MemberSearchParams {
+  page?: number;
+  house?: string;
+  party?: string;
+  searchTerm?: string;
+}
+
+export async function getMembers({
+  page = 1,
+  house = 'Commons',
+  party,
+  searchTerm
+}: MemberSearchParams = {}): Promise<MembersResponse> {
+  const cacheKey = `members-${page}-${house}-${party || 'all'}-${searchTerm || ''}`;
   const cachedData = cache.get(cacheKey);
   if (cachedData) return cachedData;
 
@@ -48,6 +60,7 @@ export async function getMembers(page: number = 1, house: string = 'Commons', pa
       page: page.toString(),
       house,
       ...(party && { party }),
+      ...(searchTerm && { search: searchTerm }),
     });
 
     const response = await fetch(`${API_URL}/v1/members?${queryParams}`, {
