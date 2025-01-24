@@ -1,6 +1,7 @@
 import { Member, MembersResponse } from './types/member';
 
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+const PARLIAMENT_API_URL = 'https://members-api.parliament.uk/api/v1';
 
 class APICache {
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
@@ -29,22 +30,27 @@ export async function getMembers(page: number = 1, house: string = 'Commons', pa
   const cachedData = cache.get(cacheKey);
   if (cachedData) return cachedData;
 
-  let url = `${process.env.PARLIAMENT_API_URL}/Members?house=${house}&take=20&skip=${(page - 1) * 20}`;
+  let url = `${PARLIAMENT_API_URL}/Members?house=${house}&take=20&skip=${(page - 1) * 20}`;
   if (party) url += `&party=${encodeURIComponent(party)}`;
 
-  const response = await fetch(url, {
-    headers: {
-      'Accept': 'application/json'
-    }
-  });
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
 
-  if (!response.ok) {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    cache.set(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching members:', error);
     throw new Error('Failed to fetch members');
   }
-
-  const data = await response.json();
-  cache.set(cacheKey, data);
-  return data;
 }
 
 export async function getMemberInterests(memberId: number): Promise<number> {
