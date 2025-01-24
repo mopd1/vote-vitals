@@ -1,0 +1,48 @@
+{
+  "version": "36.0.0",
+  "files": {
+    "3de49d03a9577e340d21a84b1eae004a17dababa6abada74e997ad3559b49a42": {
+      "source": {
+        "path": "asset.3de49d03a9577e340d21a84b1eae004a17dababa6abada74e997ad3559b49a42",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "528757790199-eu-west-2": {
+          "bucketName": "cdk-hnb659fds-assets-528757790199-eu-west-2",
+          "objectKey": "3de49d03a9577e340d21a84b1eae004a17dababa6abada74e997ad3559b49a42.zip",
+          "region": "eu-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::528757790199:role/cdk-hnb659fds-file-publishing-role-528757790199-eu-west-2"
+        }
+      }
+    },
+    "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35": {
+      "source": {
+        "path": "asset.4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "528757790199-eu-west-2": {
+          "bucketName": "cdk-hnb659fds-assets-528757790199-eu-west-2",
+          "objectKey": "4e26bf2d0a26f2097fb2b261f22bb51e3f6b4b52635777b1e54edbd8e2d58c35.zip",
+          "region": "eu-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::528757790199:role/cdk-hnb659fds-file-publishing-role-528757790199-eu-west-2"
+        }
+      }
+    },
+    "f65c00baec37ebdec82b8776f2c1599877856173ecf1437c9aa7d99d624e92bc": {
+      "source": {
+        "path": "UKPoliticsStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "528757790199-eu-west-2": {
+          "bucketName": "cdk-hnb659fds-assets-528757790199-eu-west-2",
+          "objectKey": "f65c00baec37ebdec82b8776f2c1599877856173ecf1437c9aa7d99d624e92bc.json",
+          "region": "eu-west-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::528757790199:role/cdk-hnb659fds-file-publishing-role-528757790199-eu-west-2"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,0 +1,432 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "UKPoliticsStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "UKPoliticsStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "UKPoliticsStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://528757790199/eu-west-2",
+      "properties": {
+        "templateFile": "UKPoliticsStack.template.json",
+        "terminationProtection": false,
+        "tags": {
+          "Environment": "Development",
+          "Project": "UK Politics App"
+        },
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::528757790199:role/cdk-hnb659fds-deploy-role-528757790199-eu-west-2",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::528757790199:role/cdk-hnb659fds-cfn-exec-role-528757790199-eu-west-2",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-528757790199-eu-west-2/f65c00baec37ebdec82b8776f2c1599877856173ecf1437c9aa7d99d624e92bc.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "UKPoliticsStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::528757790199:role/cdk-hnb659fds-lookup-role-528757790199-eu-west-2",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "UKPoliticsStack.assets"
+      ],
+      "metadata": {
+        "/UKPoliticsStack": [
+          {
+            "type": "aws:cdk:stack-tags",
+            "data": [
+              {
+                "Key": "Environment",
+                "Value": "Development"
+              },
+              {
+                "Key": "Project",
+                "Value": "UK Politics App"
+              }
+            ]
+          }
+        ],
+        "/UKPoliticsStack/CacheTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CacheTableC1E6DF7E"
+          }
+        ],
+        "/UKPoliticsStack/ApiGatewayLogsRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiGatewayLogsRoleA66F4CEE"
+          }
+        ],
+        "/UKPoliticsStack/ApiGatewayLogsRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiGatewayLogsRoleDefaultPolicyD1A74DF1"
+          }
+        ],
+        "/UKPoliticsStack/BackendFunction/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendFunctionServiceRoleCA938F8D"
+          }
+        ],
+        "/UKPoliticsStack/BackendFunction/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendFunctionServiceRoleDefaultPolicyA83BBE0A"
+          }
+        ],
+        "/UKPoliticsStack/BackendFunction/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendFunction63314140"
+          }
+        ],
+        "/UKPoliticsStack/BackendFunction/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendFunctionLogRetention53142365"
+          }
+        ],
+        "/UKPoliticsStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/UKPoliticsStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
+          }
+        ],
+        "/UKPoliticsStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiED3D8698"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiDeploymentC6975916f8229bc25afde7f4a898ee2d9b35a849"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/DeploymentStage.dev/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiDeploymentStagedev927FD0A2"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiEndpoint94865037"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiOPTIONS05F613F2"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv16BE840CC"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1OPTIONS35F738AB"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1members10453318"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersOPTIONS0CDD2753"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersid3303E0C7"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidOPTIONS338915D1"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/interests/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidinterestsC60D78DF"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/interests/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidinterestsOPTIONS19FDCB7C"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/interests/GET/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.GET..v1.members.{id}.interests": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidinterestsGETApiPermissionUKPoliticsStackBackendApiF90AB3EAGETv1membersidinterests42D2DCCE"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/interests/GET/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.GET..v1.members.{id}.interests": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidinterestsGETApiPermissionTestUKPoliticsStackBackendApiF90AB3EAGETv1membersidinterests2E6D49E7"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/interests/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidinterestsGETD46B8057"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/GET/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.GET..v1.members.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidGETApiPermissionUKPoliticsStackBackendApiF90AB3EAGETv1membersidB6D1C125"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/GET/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.GET..v1.members.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidGETApiPermissionTestUKPoliticsStackBackendApiF90AB3EAGETv1membersid02B997E4"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/{id}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersidGETE331AEDB"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/GET/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.GET..v1.members": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersGETApiPermissionUKPoliticsStackBackendApiF90AB3EAGETv1members24830235"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/GET/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.GET..v1.members": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersGETApiPermissionTestUKPoliticsStackBackendApiF90AB3EAGETv1membersBA678E1A"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersGET39B68636"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/POST/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.POST..v1.members": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersPOSTApiPermissionUKPoliticsStackBackendApiF90AB3EAPOSTv1members258CB5F0"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/POST/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.POST..v1.members": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersPOSTApiPermissionTestUKPoliticsStackBackendApiF90AB3EAPOSTv1membersC0CAEF9B"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/members/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1membersPOST6538FA51"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1bills07B7EFAD"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsOPTIONS2FC0DAB0"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/{id}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsidCE59EFC4"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/{id}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsidOPTIONS60D35453"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/{id}/GET/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.GET..v1.bills.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsidGETApiPermissionUKPoliticsStackBackendApiF90AB3EAGETv1billsid6757832D"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/{id}/GET/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.GET..v1.bills.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsidGETApiPermissionTestUKPoliticsStackBackendApiF90AB3EAGETv1billsidA5B6C171"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/{id}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsidGET9DA02E7E"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/GET/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.GET..v1.bills": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsGETApiPermissionUKPoliticsStackBackendApiF90AB3EAGETv1billsA1127E37"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/GET/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.GET..v1.bills": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsGETApiPermissionTestUKPoliticsStackBackendApiF90AB3EAGETv1billsD45A8F38"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/bills/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1billsGET03A63A89"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votes429C26C0"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesOPTIONSEFC047D4"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/{id}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesidB1EB0042"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/{id}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesidOPTIONS05213816"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/{id}/GET/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.GET..v1.votes.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesidGETApiPermissionUKPoliticsStackBackendApiF90AB3EAGETv1votesid44C7535E"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/{id}/GET/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.GET..v1.votes.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesidGETApiPermissionTestUKPoliticsStackBackendApiF90AB3EAGETv1votesidA3F32565"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/{id}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesidGET124C9D21"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/GET/ApiPermission.UKPoliticsStackBackendApiF90AB3EA.GET..v1.votes": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesGETApiPermissionUKPoliticsStackBackendApiF90AB3EAGETv1votes03F9DE74"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/GET/ApiPermission.Test.UKPoliticsStackBackendApiF90AB3EA.GET..v1.votes": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesGETApiPermissionTestUKPoliticsStackBackendApiF90AB3EAGETv1votes22485DC4"
+          }
+        ],
+        "/UKPoliticsStack/BackendApi/Default/v1/votes/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BackendApiv1votesGETF751B408"
+          }
+        ],
+        "/UKPoliticsStack/ApiGatewayLogs/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiGatewayLogs22899D9B"
+          }
+        ],
+        "/UKPoliticsStack/ApiGatewayAccount": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiGatewayAccount"
+          }
+        ],
+        "/UKPoliticsStack/ApiUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiUrl"
+          }
+        ],
+        "/UKPoliticsStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/UKPoliticsStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/UKPoliticsStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "UKPoliticsStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

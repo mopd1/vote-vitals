@@ -62,77 +62,91 @@ export class UKPoliticsStack extends cdk.Stack {
         metricsEnabled: true,
       },
       defaultCorsPreflightOptions: {
-        allowOrigins: ['https://votevitals.com'],  // Only allow votevitals.com
-        allowMethods: apigateway.Cors.ALL_METHODS,
+        allowOrigins: [
+          'https://votevitals.com',
+          'https://www.votevitals.com',
+          'https://vote-vitals.vercel.app',
+          'https://*.vercel.app',  // Allow all Vercel preview deployments
+          'http://localhost:3000'
+        ],
+        allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowHeaders: [
           'Content-Type',
           'X-Amz-Date',
           'Authorization',
           'X-Api-Key',
           'X-Amz-Security-Token',
+          'Accept'
         ],
         allowCredentials: true,
         maxAge: cdk.Duration.days(1),
       },
     });
 
-    // Create API resources
-    const apiRoot = api.root;
+    // Create v1 API resources
+    const v1 = api.root.addResource('v1');
     
-    // /api
-    const apiResource = apiRoot.addResource('api');
+    // Members endpoints
+    const members = v1.addResource('members');
+    const memberById = members.addResource('{id}');
+    const memberInterests = memberById.addResource('interests');
     
-    // /api/parliament
-    const parliamentResource = apiResource.addResource('parliament');
+    // Bills endpoints
+    const bills = v1.addResource('bills');
+    const billById = bills.addResource('{id}');
     
-    // /api/parliament/members
-    const membersResource = parliamentResource.addResource('members');
-    const memberEarningsResource = membersResource.addResource('earnings');
-    const memberByIdResource = membersResource.addResource('{id}');
+    // Votes endpoints
+    const votes = v1.addResource('votes');
+    const voteById = votes.addResource('{id}');
 
-    // /api/parliament/bills
-    const billsResource = parliamentResource.addResource('bills');
-    const billByIdResource = billsResource.addResource('{id}');
-
-    // Create Lambda integration with response configuration
+    // Create Lambda integration
     const lambdaIntegration = new apigateway.LambdaIntegration(backendFunction, {
       proxy: true,
       allowTestInvoke: true,
-      integrationResponses: [
-        {
-          statusCode: '200',
-          responseParameters: {
-            'method.response.header.Access-Control-Allow-Origin': "'https://votevitals.com'",
-            'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-            'method.response.header.Access-Control-Allow-Methods': "'GET,OPTIONS'",
-          },
-        },
-      ],
     });
 
-    // Add methods to resources with proper response configuration
-    const resources = [
-      membersResource,
-      memberEarningsResource,
-      memberByIdResource,
-      billsResource,
-      billByIdResource,
-    ];
-
-    resources.forEach(resource => {
-      resource.addMethod('GET', lambdaIntegration, {
-        methodResponses: [
-          {
-            statusCode: '200',
-            responseParameters: {
-              'method.response.header.Access-Control-Allow-Origin': true,
-              'method.response.header.Access-Control-Allow-Headers': true,
-              'method.response.header.Access-Control-Allow-Methods': true,
+    // Helper function to add methods to a resource
+    const addMethods = (resource: apigateway.Resource, methods: string[]) => {
+      methods.forEach(method => {
+        resource.addMethod(method, lambdaIntegration, {
+          methodResponses: [
+            {
+              statusCode: '200',
+              responseParameters: {
+                'method.response.header.Access-Control-Allow-Origin': true,
+                'method.response.header.Access-Control-Allow-Headers': true,
+                'method.response.header.Access-Control-Allow-Methods': true,
+                'method.response.header.Access-Control-Allow-Credentials': true,
+              },
+              responseModels: {
+                'application/json': apigateway.Model.EMPTY_MODEL,
+              },
             },
-          },
-        ],
+            {
+              statusCode: '400',
+              responseParameters: {
+                'method.response.header.Access-Control-Allow-Origin': true,
+              },
+            },
+            {
+              statusCode: '500',
+              responseParameters: {
+                'method.response.header.Access-Control-Allow-Origin': true,
+              },
+            },
+          ],
+        });
       });
-    });
+    };
+
+    // Add methods to resources
+    addMethods(members, ['GET', 'POST']);
+    addMethods(memberById, ['GET']);
+    addMethods(memberInterests, ['GET']);
+    addMethods(bills, ['GET']);
+    addMethods(billById, ['GET']);
+    addMethods(votes, ['GET']);
+    addMethods(voteById, ['GET']);
 
     // Create log group for API Gateway
     const logGroup = new logs.LogGroup(this, 'ApiGatewayLogs', {

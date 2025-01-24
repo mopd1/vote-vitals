@@ -25,32 +25,40 @@ class APICache {
 
 const cache = new APICache();
 
+interface APIError extends Error {
+  status?: number;
+}
+
+async function handleResponse(response: Response) {
+  if (!response.ok) {
+    const error: APIError = new Error('API request failed');
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
+}
+
 export async function getMembers(page: number = 1, house: string = 'Commons', party?: string): Promise<MembersResponse> {
   const cacheKey = `members-${page}-${house}-${party || 'all'}`;
   const cachedData = cache.get(cacheKey);
   if (cachedData) return cachedData;
 
   try {
-    // Using our AWS API Gateway endpoint instead of direct Parliament API access
-    const response = await fetch(`${API_URL}/members`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        house,
-        skip: (page - 1) * 20,
-        take: 20,
-        ...(party && { party }),
-      }),
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      house,
+      ...(party && { party }),
     });
 
-    if (!response.ok) {
-      console.error('API Response:', await response.text());
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const response = await fetch(`${API_URL}/v1/members?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
 
-    const data = await response.json();
+    const data = await handleResponse(response);
     
     if (!data.items) {
       throw new Error('Invalid response format');
@@ -70,14 +78,12 @@ export async function getMemberInterests(memberId: number): Promise<number> {
   if (cachedData) return cachedData;
 
   try {
-    const response = await fetch(`${API_URL}/members/${memberId}/interests`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const response = await fetch(`${API_URL}/v1/members/${memberId}/interests`);
+    const data = await handleResponse(response);
+    const totalValue = data.totalValue || 0;
     
-    const data = await response.json();
-    cache.set(cacheKey, data.totalValue || 0);
-    return data.totalValue || 0;
+    cache.set(cacheKey, totalValue);
+    return totalValue;
   } catch (error) {
     console.error('Error fetching member interests:', error);
     return 0;
