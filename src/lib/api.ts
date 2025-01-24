@@ -1,7 +1,7 @@
 import { Member, MembersResponse } from './types/member';
 
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
-const PARLIAMENT_API_URL = 'https://members-api.parliament.uk/api/v1';
+const API_URL = 'https://lxniao0js0.execute-api.eu-west-2.amazonaws.com/dev';
 
 class APICache {
   private cache: Map<string, { data: any; timestamp: number }> = new Map();
@@ -30,21 +30,32 @@ export async function getMembers(page: number = 1, house: string = 'Commons', pa
   const cachedData = cache.get(cacheKey);
   if (cachedData) return cachedData;
 
-  let url = `${PARLIAMENT_API_URL}/Members?house=${house}&take=20&skip=${(page - 1) * 20}`;
-  if (party) url += `&party=${encodeURIComponent(party)}`;
-
   try {
-    const response = await fetch(url, {
+    // Using our AWS API Gateway endpoint instead of direct Parliament API access
+    const response = await fetch(`${API_URL}/members`, {
+      method: 'POST',
       headers: {
-        'Accept': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        house,
+        skip: (page - 1) * 20,
+        take: 20,
+        ...(party && { party }),
+      }),
     });
 
     if (!response.ok) {
+      console.error('API Response:', await response.text());
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
+    
+    if (!data.items) {
+      throw new Error('Invalid response format');
+    }
+
     cache.set(cacheKey, data);
     return data;
   } catch (error) {
@@ -58,7 +69,17 @@ export async function getMemberInterests(memberId: number): Promise<number> {
   const cachedData = cache.get(cacheKey);
   if (cachedData) return cachedData;
 
-  // Implement interests API call here
-  // For now returning 0
-  return 0;
+  try {
+    const response = await fetch(`${API_URL}/members/${memberId}/interests`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    cache.set(cacheKey, data.totalValue || 0);
+    return data.totalValue || 0;
+  } catch (error) {
+    console.error('Error fetching member interests:', error);
+    return 0;
+  }
 }

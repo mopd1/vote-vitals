@@ -17,12 +17,13 @@ export default function Members() {
     async function fetchMembers() {
       try {
         setLoading(true);
+        setError(null);
         const data = await getMembers(page, selectedHouse, selectedParty);
         setMembers(data.items);
         setTotalPages(Math.ceil(data.totalResults / 20));
       } catch (err) {
-        setError('Failed to load members');
-        console.error(err);
+        console.error('Error loading members:', err);
+        setError('Unable to load members. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -30,10 +31,6 @@ export default function Members() {
 
     fetchMembers();
   }, [page, selectedHouse, selectedParty]);
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
 
   return (
     <div className="container mx-auto px-4">
@@ -43,23 +40,30 @@ export default function Members() {
       <div className="mb-6 flex gap-4">
         <select 
           value={selectedHouse}
-          onChange={(e) => setSelectedHouse(e.target.value)}
+          onChange={(e) => {
+            setPage(1);
+            setSelectedHouse(e.target.value);
+          }}
           className="border rounded p-2"
         >
           <option value="Commons">House of Commons</option>
           <option value="Lords">House of Lords</option>
         </select>
-
-        {/* Party filter will be added here */}
       </div>
 
       {loading ? (
-        <div>Loading...</div>
+        <div className="flex justify-center items-center py-8">
+          <div className="animate-pulse text-lg">Loading members...</div>
+        </div>
+      ) : error ? (
+        <div className="bg-red-50 border border-red-200 text-red-600 rounded-md p-4">
+          {error}
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {members.map((member) => (
-              <div key={member.id} className="border rounded-lg p-4 shadow">
+              <div key={member.id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-4">
                   {member.thumbnailUrl && (
                     <img 
@@ -71,8 +75,10 @@ export default function Members() {
                   <div>
                     <h2 className="font-semibold">{member.nameDisplayAs}</h2>
                     <p className="text-gray-600">{member.latestParty.name}</p>
-                    <p className="text-sm">{member.membershipFrom}</p>
-                    <p className="text-sm">Member since {new Date(member.startDate).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-500">{member.membershipFrom}</p>
+                    <p className="text-sm text-gray-500">
+                      Member since {new Date(member.startDate).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -80,19 +86,23 @@ export default function Members() {
           </div>
 
           {/* Pagination */}
-          <div className="mt-6 flex justify-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setPage(i + 1)}
-                className={`px-3 py-1 border rounded ${
-                  page === i + 1 ? 'bg-blue-500 text-white' : ''
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-          </div>
+          {totalPages > 1 && (
+            <div className="mt-6 flex justify-center gap-2">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => setPage(i + 1)}
+                  className={`px-3 py-1 border rounded transition-colors ${
+                    page === i + 1 
+                      ? 'bg-blue-500 text-white' 
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
         </>
       )}
     </div>
