@@ -99,14 +99,18 @@ export async function getMembersByPostcode(postcode: string): Promise<PostcodeLo
       },
     });
 
-    const data = await handleResponse(response);
+    if (!response.ok && response.status === 404) {
+      throw new Error('Invalid postcode or no constituency found');
+    }
+
+    const data = await response.json();
     cache.set(cacheKey, data);
     return data;
   } catch (error) {
-    if (error instanceof Error && error.status === 404) {
-      throw new Error('Invalid postcode or no constituency found');
-    }
     console.error('Error fetching members by postcode:', error);
+    if (error instanceof Error) {
+      throw error; // Re-throw the original error if it's already an Error instance
+    }
     throw new Error('Failed to fetch members by postcode');
   }
 }
