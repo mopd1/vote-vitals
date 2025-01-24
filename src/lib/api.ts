@@ -1,4 +1,4 @@
-import { Member, MembersResponse } from './types/member';
+import { Member, MembersResponse, PostcodeLookupResponse } from './types/member';
 
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 const API_URL = 'https://lxniao0js0.execute-api.eu-west-2.amazonaws.com/dev';
@@ -82,6 +82,32 @@ export async function getMembers({
   } catch (error) {
     console.error('Error fetching members:', error);
     throw new Error('Failed to fetch members');
+  }
+}
+
+export async function getMembersByPostcode(postcode: string): Promise<PostcodeLookupResponse> {
+  const cacheKey = `postcode-${postcode}`;
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  try {
+    const response = await fetch(`${API_URL}/v1/members/postcode/${postcode.replace(/\s/g, '')}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await handleResponse(response);
+    cache.set(cacheKey, data);
+    return data;
+  } catch (error) {
+    if (error instanceof Error && error.status === 404) {
+      throw new Error('Invalid postcode or no constituency found');
+    }
+    console.error('Error fetching members by postcode:', error);
+    throw new Error('Failed to fetch members by postcode');
   }
 }
 

@@ -15,4 +15,23 @@ export interface Member {
 export interface MembersResponse {
   items: Member[];
   totalResults: number;
+  currentPage?: number;
+  totalPages?: number;
+}
+
+export interface Constituency {
+  id: number;
+  name: string;
+  gssCode: string;
+}
+
+export interface NeighborInfo {
+  constituency: Constituency;
+  mp: Member | null;
+}
+
+export interface PostcodeLookupResponse {
+  constituency: Constituency;
+  mp: Member | null;
+  neighbors: NeighborInfo[];
 }
