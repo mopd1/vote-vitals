@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://lxniao0js0.execute-api.eu-west-2.amazonaws.com/dev",
+    "PARLIAMENT_API_URL": "https://members-api.parliament.uk/api/v1"
+  }
+}

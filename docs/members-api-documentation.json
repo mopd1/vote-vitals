@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Members API",
+    "description": "An API which retrieves Members data.",
+    "contact": {
+      "name": "UK Parliament",
+      "url": "https://www.parliament.uk",
+      "email": "softwareengineering@parliament.uk"
+    },
+    "version": "v1"
+  },
+  // ... rest of the Members API doc
+}

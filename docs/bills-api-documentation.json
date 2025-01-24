@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Bills API",
+    "description": "API to get and search for information regarding Bills, their stages, associated amendments and publications.",
+    "contact": {
+      "name": "UK Parliament",
+      "url": "https://www.parliament.uk",
+      "email": "softwareengineering@parliament.uk"
+    },
+    "version": "v1"
+  },
+  // ... rest of the API documentation ...
+}

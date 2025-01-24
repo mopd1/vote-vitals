@@ -1,0 +1,14 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Commons Votes API",
+    "description": "An API that allows querying of Commons Votes data.",
+    "contact": {
+      "name": "UK Parliament",
+      "url": "https://www.parliament.uk/",
+      "email": "softwareengineering@parliament.uk"
+    }
+  },
+  // ... rest of the Commons Votes API doc
+}

@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Register of Interests API",
+    "description": "API to allow users to query and download the register of Members interests.",
+    "contact": {
+      "name": "UK Parliament",
+      "url": "https://www.parliament.uk/",
+      "email": "softwareengineering@parliament.uk"
+    },
+    "version": "v1"
+  },
+  // ... rest of the Interests API doc
+}
