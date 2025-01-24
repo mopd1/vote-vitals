@@ -91,6 +91,10 @@ export class UKPoliticsStack extends cdk.Stack {
     const memberById = members.addResource('{id}');
     const memberInterests = memberById.addResource('interests');
     
+    // Add postcode endpoint
+    const postcode = members.addResource('postcode');
+    const postcodeParam = postcode.addResource('{postcode}');
+    
     // Bills endpoints
     const bills = v1.addResource('bills');
     const billById = bills.addResource('{id}');
@@ -143,6 +147,7 @@ export class UKPoliticsStack extends cdk.Stack {
     addMethods(members, ['GET', 'POST']);
     addMethods(memberById, ['GET']);
     addMethods(memberInterests, ['GET']);
+    addMethods(postcodeParam, ['GET']); // Add GET method for postcode endpoint
     addMethods(bills, ['GET']);
     addMethods(billById, ['GET']);
     addMethods(votes, ['GET']);
