@@ -12,74 +12,86 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
     // Handle postcode lookup
     if (path.startsWith('/v1/members/postcode/')) {
-      const postcode = path.split('/').pop()?.toUpperCase();
+      const postcode = decodeURIComponent(path.split('/').pop() || '').toUpperCase().replace(/\s+/g, '');
       console.log('Looking up postcode:', postcode);
 
       try {
+        // Log the URL we're about to call
+        const constituencyUrl = `${PARLIAMENT_API}/Location/Constituency/Postcode/${postcode}`;
+        console.log('Constituency lookup URL:', constituencyUrl);
+
         // 1. Get constituency from postcode
-        const constituencyResponse = await axios.get(
-          `${PARLIAMENT_API}/Location/Constituency/Postcode/${postcode}`,
-          {
-            headers: {
-              'Accept': 'application/json',
-              'User-Agent': 'Vote Vitals (https://votevitals.com)'
-            }
+        const constituencyResponse = await axios.get(constituencyUrl, {
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Vote Vitals (https://votevitals.com)'
           }
-        );
+        });
+        
+        console.log('Constituency Response:', JSON.stringify(constituencyResponse.data, null, 2));
+
+        if (!constituencyResponse.data.value) {
+          throw new Error('No constituency found for postcode');
+        }
 
         const constituency = constituencyResponse.data.value;
         
         // 2. Get current MP for the constituency
-        const mpResponse = await axios.get(
-          `${PARLIAMENT_API}/Members/Search`,
-          {
-            params: {
-              ConstituencyId: constituency.id,
-              IsCurrentMember: true,
-              House: 'Commons'
-            },
-            headers: {
-              'Accept': 'application/json',
-              'User-Agent': 'Vote Vitals (https://votevitals.com)'
-            }
+        const mpUrl = `${PARLIAMENT_API}/Members/Search`;
+        console.log('MP lookup URL:', mpUrl);
+        
+        const mpResponse = await axios.get(mpUrl, {
+          params: {
+            ConstituencyId: constituency.id,
+            IsCurrentMember: true,
+            House: 'Commons'
+          },
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Vote Vitals (https://votevitals.com)'
           }
-        );
+        });
+
+        console.log('MP Response:', JSON.stringify(mpResponse.data, null, 2));
 
         const mp = mpResponse.data.items[0]?.value;
 
         // 3. Get neighboring constituencies
-        const neighborsResponse = await axios.get(
-          `${PARLIAMENT_API}/Location/Constituency/${constituency.id}/Neighbors`,
-          {
-            headers: {
-              'Accept': 'application/json',
-              'User-Agent': 'Vote Vitals (https://votevitals.com)'
-            }
+        const neighborsUrl = `${PARLIAMENT_API}/Location/Constituency/${constituency.id}/Neighbors`;
+        console.log('Neighbors lookup URL:', neighborsUrl);
+        
+        const neighborsResponse = await axios.get(neighborsUrl, {
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Vote Vitals (https://votevitals.com)'
           }
-        );
+        });
+
+        console.log('Neighbors Response:', JSON.stringify(neighborsResponse.data, null, 2));
 
         // 4. Get MPs for neighboring constituencies
         const neighborConstituencies = neighborsResponse.data.value || [];
         const neighborMPs = await Promise.all(
           neighborConstituencies.map(async (neighbor: any) => {
-            const neighborMpResponse = await axios.get(
-              `${PARLIAMENT_API}/Members/Search`,
-              {
-                params: {
-                  ConstituencyId: neighbor.id,
-                  IsCurrentMember: true,
-                  House: 'Commons'
-                },
-                headers: {
-                  'Accept': 'application/json',
-                  'User-Agent': 'Vote Vitals (https://votevitals.com)'
-                }
+            const neighborMpResponse = await axios.get(mpUrl, {
+              params: {
+                ConstituencyId: neighbor.id,
+                IsCurrentMember: true,
+                House: 'Commons'
+              },
+              headers: {
+                'Accept': 'application/json',
+                'User-Agent': 'Vote Vitals (https://votevitals.com)'
               }
-            );
+            });
             
             const neighborMp = neighborMpResponse.data.items[0]?.value;
             return {
-              constituency: neighbor,
+              constituency: {
+                id: neighbor.id,
+                name: neighbor.name,
+                gssCode: neighbor.gssCode
+              },
               mp: neighborMp ? {
                 id: neighborMp.id,
                 nameDisplayAs: neighborMp.nameDisplayAs,
@@ -121,19 +133,19 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
           })
         };
       } catch (apiError: any) {
-        console.error('Parliament API Error:', apiError.message);
-        if (apiError.response?.status === 404) {
-          return {
-            statusCode: 404,
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': event.headers.origin || '*',
-              'Access-Control-Allow-Credentials': 'true'
-            },
-            body: JSON.stringify({ message: 'Invalid postcode or no constituency found' })
-          };
+        console.error('Parliament API Error:', apiError);
+        if (apiError.response) {
+          console.error('API Error Response:', JSON.stringify(apiError.response.data, null, 2));
         }
-        throw apiError;
+        return {
+          statusCode: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': event.headers.origin || '*',
+            'Access-Control-Allow-Credentials': 'true'
+          },
+          body: JSON.stringify({ message: 'Invalid postcode or no constituency found' })
+        };
       }
     }
 
@@ -201,7 +213,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
           body: JSON.stringify(transformedData)
         };
       } catch (apiError: any) {
-        console.error('Parliament API Error:', apiError.message);
+        console.error('Parliament API Error:', apiError);
         if (apiError.response) {
           console.error('API Error Response:', JSON.stringify(apiError.response.data, null, 2));
         }
