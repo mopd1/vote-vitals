@@ -132,3 +132,20 @@ export async function getMemberInterests(memberId: number): Promise<number> {
     return 0;
   }
 }
+
+export async function getLeaderboard(): Promise<Member[]> {
+  const cacheKey = 'leaderboard';
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) return cachedData;
+
+  try {
+    const response = await fetch(`${API_URL}/v1/members/interests/leaderboard`);
+    const data = await handleResponse(response);
+    
+    cache.set(cacheKey, data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    throw new Error('Failed to fetch leaderboard data');
+  }
+}
